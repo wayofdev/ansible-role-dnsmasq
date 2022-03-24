@@ -1,0 +1,3 @@
+{% for host in dnsmasq_hosts %}
+address=/{{ host.domain }}/{{ host.ip }}
+{% endfor %}
