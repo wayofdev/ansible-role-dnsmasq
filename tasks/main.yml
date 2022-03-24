@@ -20,7 +20,7 @@
 
 - name: Ensure resolver directory exists.
   file: dest=/etc/resolver state=directory mode=0755
-  become: yes
+  become: true
 
 - name: Configure Dnsmasq resolver.
   copy:
@@ -28,10 +28,10 @@
     dest: "/etc/resolver/{{ item.domain }}"
     mode: 0644
   loop: "{{ dnsmasq_hosts }}"
-  become: yes
+  become: true
 
 - name: Make sure Dnsmasq is running
   service:
     name: dnsmasq
     state: started
-    enabled: yes
+    enabled: true
