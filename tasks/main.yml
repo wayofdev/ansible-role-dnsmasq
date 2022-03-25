@@ -1,13 +1,13 @@
 ---
 
-- name: Install Dnsmasq.
+- name: Installing Dnsmasq
   homebrew:
     name: dnsmasq
     state: present
   notify:
     - Restart Dnsmasq
 
-- name: Copy Dnsmasq configuration in place.
+- name: Copying dnsmasq configuration.
   template:
     src: dnsmasq.conf.j2
     dest: "{{ homebrew_prefix }}/etc/dnsmasq.conf"
@@ -17,11 +17,11 @@
   notify:
     - Restart Dnsmasq
 
-- name: Ensure resolver directory exists.
+- name: Ensuring resolver directory exists
   file: dest=/etc/resolver state=directory mode=0755
   become: true
 
-- name: Configure Dnsmasq resolver.
+- name: Configuring Dnsmasq Resolver
   copy:
     src: resolver.conf
     dest: "/etc/resolver/{{ item.domain }}"
@@ -29,7 +29,7 @@
   loop: "{{ dnsmasq_hosts }}"
   become: true
 
-- name: Make sure Dnsmasq is running
+- name: Starting Dnsmasq Service
   service:
     name: dnsmasq
     state: started

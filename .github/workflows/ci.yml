@@ -90,7 +90,9 @@ jobs:
 
   publish:
     if: github.event.inputs.shouldPublishImage == 'yes' || github.ref == 'refs/heads/master'
-    needs: lint
+    needs:
+      - lint
+      - integration
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

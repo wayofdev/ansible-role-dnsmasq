@@ -2,3 +2,5 @@
 
 homebrew_prefix: "{{ (ansible_machine == 'arm64') | ternary('/opt/homebrew', '/usr/local') }}"
 homebrew_install_path: "{{ homebrew_prefix }}/Homebrew"
+homebrew_user: "{{ ansible_user_id }}"
+homebrew_group: "{{ ansible_user_gid }}"

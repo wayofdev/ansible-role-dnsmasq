@@ -1,6 +1,6 @@
 ---
 
-- name: Deploy Dnsmasq job definition
+- name: Deploying Dnsmasq Serice
   copy:
     src: "{{ homebrew_prefix }}/opt/dnsmasq/homebrew.mxcl.dnsmasq.plist"
     dest: "/Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist"
@@ -8,7 +8,7 @@
   listen: Restart Dnsmasq
   become: true
 
-- name: Restart Dnsmasq service
+- name: Restarting Dnsmasq Service
   community.general.launchd:
     name: homebrew.mxcl.dnsmasq
     state: restarted

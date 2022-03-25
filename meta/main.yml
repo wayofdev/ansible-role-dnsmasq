@@ -2,7 +2,7 @@
 
 galaxy_info:
   role_name: dnsmasq
-  author: lotyp
+  author: wayofdev
   description: Ansible role that installs Dnsmasq on OSX.
   company: wayofdev
 
