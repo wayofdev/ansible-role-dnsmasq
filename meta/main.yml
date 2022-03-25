@@ -13,8 +13,8 @@ galaxy_info:
   platforms:
     - name: MacOSX
       versions:
-        - '10.13'
-        - '10.14'
+        - '11.*'
+        - '12.*'
 
   galaxy_tags:
     - 'networking'
