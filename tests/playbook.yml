@@ -1,0 +1,6 @@
+---
+- name: Run apache
+hosts: all
+roles:
+  - dnsmasq
+  EOL

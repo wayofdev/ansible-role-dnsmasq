@@ -29,35 +29,24 @@ jobs:
           set -eux
 
           pip install ansible
-          pip install yamllint
-          pip install ansible-lint
+#          pip install yamllint
+#          pip install ansible-lint
 
-      - name: Run yamllint
-        run: yamllint .
-
-      - name: Run ansible lint
-        working-directory: tests
-        run: ansible-lint test.yml -c ../.ansible-lint
-
-      - name: Verify syntax
-        working-directory: tests
-        run: ansible-playbook test.yml --syntax-check
+#      - name: Run yamllint
+#        run: yamllint .
+#
+#      - name: Run ansible lint
+#        working-directory: tests
+#        run: ansible-lint test.yml -c ../.ansible-lint
+#
+#      - name: Verify syntax
+#        working-directory: tests
+#        run: ansible-playbook test.yml --syntax-check
 
       - name: Run Role
         run: |
           ansible-galaxy install git+https://github.com/wayofdev/ansible-role-dnsmasq.git
-          cat >> playbook.yml <<EOL
-          ---
-          - name: Run apache
-          hosts: all
-          roles:
-            - apache-role
-          EOL
-
-          cat >> hosts <<EOL
-          192.168.0.10
-          EOL
-          ansible-playbook playbook.yml -i hosts
+          ansible-playbook tests/playbook.yml -i tests/inventory
 
   publish:
     if: github.event.inputs.shouldPublishImage == 'yes' || github.ref == 'refs/heads/master'
