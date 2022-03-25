@@ -30,7 +30,7 @@
   become: true
 
 - name: Starting Dnsmasq Service
-  service:
-    name: dnsmasq
-    state: started
+  community.general.launchd:
+    name: homebrew.mxcl.dnsmasq
     enabled: true
+    state: started
