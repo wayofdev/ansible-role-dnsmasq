@@ -1,13 +1,5 @@
 ---
 
-- name: Deploying Dnsmasq Serice
-  copy:
-    src: "{{ homebrew_prefix }}/opt/dnsmasq/homebrew.mxcl.dnsmasq.plist"
-    dest: "/Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist"
-    mode: 0644
-  listen: Restart Dnsmasq
-  become: true
-
 - name: Restarting Dnsmasq Service
   community.general.launchd:
     name: homebrew.mxcl.dnsmasq

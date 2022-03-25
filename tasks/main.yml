@@ -4,8 +4,6 @@
   homebrew:
     name: dnsmasq
     state: present
-  notify:
-    - Restart Dnsmasq
 
 - name: Copying dnsmasq configuration.
   template:
@@ -14,8 +12,6 @@
     owner: "{{ homebrew_user }}"
     group: "{{ homebrew_group }}"
     mode: 0644
-  notify:
-    - Restart Dnsmasq
 
 - name: Ensuring resolver directory exists
   file: dest=/etc/resolver state=directory mode=0755
@@ -29,7 +25,14 @@
   loop: "{{ dnsmasq_hosts }}"
   become: true
 
-- name: Starting Dnsmasq Service
+- name: Deploying Dnsmasq Service
+  copy:
+    src: "{{ homebrew_prefix }}/opt/dnsmasq/homebrew.mxcl.dnsmasq.plist"
+    dest: "/Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist"
+    mode: 0644
+  become: true
+
+- name: Ensuring that Dnsmasq Service is Running
   community.general.launchd:
     name: homebrew.mxcl.dnsmasq
     enabled: true
