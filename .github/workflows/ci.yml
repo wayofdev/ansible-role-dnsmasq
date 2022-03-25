@@ -31,6 +31,7 @@ jobs:
 
       - name: Install test dependencies.
         run: |
+          ansible-galaxy install -r requirements.yml
           pip3 install yamllint
           pip3 install ansible-lint
 
@@ -63,8 +64,8 @@ jobs:
       - name: Install dependencies
         run: |
           set -eux
-
           pip install ansible
+          ansible-galaxy install -r requirements.yml
 
       - name: Set up the test environment.
         run: |

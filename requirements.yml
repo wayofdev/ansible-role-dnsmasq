@@ -1,3 +1,5 @@
 ---
-- src: geerlingguy.mac
-- src: community.general.launchd
+
+collections:
+  - name: geerlingguy.mac
+  - name: community.general
