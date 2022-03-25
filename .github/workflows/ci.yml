@@ -81,14 +81,17 @@ jobs:
         run: |
           idempotence=$(mktemp)
           ansible-playbook tests/test.yml | tee -a ${idempotence}
-          tail ${idempotence} | grep -q 'changed=0.*failed=0' && (echo 'Idempotence test: pass' && exit 0) || (echo 'Idempotence test: fail' && exit 1)
+          tail ${idempotence} \
+            | grep -q 'changed=0.*failed=0' \
+            && (echo 'Idempotence test: pass' && exit 0) \
+            || (echo 'Idempotence test: fail' && exit 1)
         env:
           ANSIBLE_FORCE_COLOR: '1'
 
   publish:
     if: github.event.inputs.shouldPublishImage == 'yes' || github.ref == 'refs/heads/master'
     needs: lint
-    runs-on: macOS-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
