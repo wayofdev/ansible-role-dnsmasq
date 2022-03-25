@@ -45,7 +45,7 @@ jobs:
 
       - name: Run Role
         run: |
-          ansible-galaxy install ./
+          ansible-galaxy install git+https://github.com/wayofdev/ansible-role-dnsmasq.git
           cat >> playbook.yml <<EOL
           ---
           - name: Run apache
