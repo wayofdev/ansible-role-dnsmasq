@@ -86,7 +86,7 @@ jobs:
 
   publish:
     if: github.event.inputs.shouldPublishImage == 'yes' || github.ref == 'refs/heads/master'
-    needs: ci
+    needs: lint
     runs-on: macOS-latest
     steps:
       - uses: actions/checkout@v2
