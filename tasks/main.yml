@@ -1,23 +1,32 @@
 ---
 
-- name: Installing Dnsmasq
+- name: Installing Dnsmasq.
   homebrew:
     name: dnsmasq
     state: present
+    update_homebrew: true
+
+- name: Get System etc Directory.
+  shell:
+    cmd: echo "$(brew --prefix)/etc/"
+  register: etc_config_directory
 
 - name: Copying dnsmasq configuration.
   template:
     src: dnsmasq.conf.j2
-    dest: "{{ homebrew_prefix }}/etc/dnsmasq.conf"
+    dest: "{{ etc_config_directory.stdout | trim }}/dnsmasq.conf"
     owner: "{{ homebrew_user }}"
     group: "{{ homebrew_group }}"
     mode: 0644
 
-- name: Ensuring resolver directory exists
-  file: dest=/etc/resolver state=directory mode=0755
+- name: Ensuring resolver directory exists.
+  file:
+    dest: /etc/resolver
+    state: directory
+    mode=0755
   become: true
 
-- name: Configuring Dnsmasq Resolver
+- name: Configuring Dnsmasq Resolver.
   copy:
     src: resolver.conf
     dest: "/etc/resolver/{{ item.domain }}"
@@ -25,14 +34,14 @@
   loop: "{{ dnsmasq_hosts }}"
   become: true
 
-- name: Deploying Dnsmasq Service
+- name: Deploying Dnsmasq Service.
   copy:
     src: "{{ homebrew_prefix }}/opt/dnsmasq/homebrew.mxcl.dnsmasq.plist"
     dest: "/Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist"
     mode: 0644
   become: true
 
-- name: Ensuring that Dnsmasq Service is Running
+- name: Ensuring that Dnsmasq Service is Running.
   community.general.launchd:
     name: homebrew.mxcl.dnsmasq
     enabled: true

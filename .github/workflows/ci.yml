@@ -67,11 +67,6 @@ jobs:
           pip install ansible
           ansible-galaxy install -r requirements.yml
 
-      - name: Set up the test environment.
-        run: |
-          cp tests/ansible.cfg ./ansible.cfg
-          cp tests/inventory ./inventory
-
       - name: Test the playbook.
         run: ansible-playbook tests/test.yml
         env:
@@ -98,7 +93,6 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: galaxy
-        uses: robertdebock/galaxy-action@1.1.1
+        uses: robertdebock/galaxy-action@1.2.0
         with:
           galaxy_api_key: ${{ secrets.GALAXY_API_KEY }}
-          path: wayofdev

@@ -2,7 +2,7 @@
 
 galaxy_info:
   role_name: dnsmasq
-  author: wayofdev
+  author: lotyp
   description: Ansible role that installs Dnsmasq on OSX.
   company: wayofdev
 
@@ -11,10 +11,9 @@ galaxy_info:
   min_ansible_version: 2.6
 
   platforms:
-    - name: MacOSX
+    - name: macOS
       versions:
-        - '11.*'
-        - '12.*'
+        - "Big-Sur"
 
   galaxy_tags:
     - 'networking'
