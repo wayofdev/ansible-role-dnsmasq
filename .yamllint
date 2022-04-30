@@ -1,11 +1,16 @@
 ---
+
 extends: default
 
+# Overwrite above default rules
 rules:
-  line-length:
-    max: 120
-    level: warning
+  colons:
+    max-spaces-before: 0
+    max-spaces-after: 60
+  comments:
+    require-starting-space: true
+    min-spaces-from-content: 1
+  line-length: disable
 
 ignore: |
   .github/stale.yml
-  .travis.yml

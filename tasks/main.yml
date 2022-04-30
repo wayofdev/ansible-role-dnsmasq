@@ -1,47 +1,48 @@
 ---
 
-- name: Installing Dnsmasq.
-  homebrew:
+- name: Dnsmasq - Installing application.
+  community.general.homebrew:
     name: dnsmasq
     state: present
     update_homebrew: true
 
-- name: Get System etc Directory.
-  shell:
-    cmd: echo "$(brew --prefix)/etc/"
+- name: Dnsmasq - Get System etc Directory.
+  ansible.builtin.shell: >
+    echo "$(brew --prefix)/etc/"
   register: etc_config_directory
+  changed_when: false
 
-- name: Copying dnsmasq configuration.
-  template:
+- name: Dnsmasq - Copying dnsmasq configuration.
+  ansible.builtin.template:
     src: dnsmasq.conf.j2
     dest: "{{ etc_config_directory.stdout | trim }}/dnsmasq.conf"
     owner: "{{ homebrew_user }}"
     group: "{{ homebrew_group }}"
     mode: 0644
 
-- name: Ensuring resolver directory exists.
-  file:
+- name: Dnsmasq - Ensuring resolver directory exists.
+  ansible.bultin.file:
     dest: /etc/resolver
     state: directory
-    mode=0755
+    mode: 0755
   become: true
 
-- name: Configuring Dnsmasq Resolver.
-  copy:
+- name: Dnsmasq - Configuring Dnsmasq Resolver.
+  ansible.bultin.copy:
     src: resolver.conf
     dest: "/etc/resolver/{{ item.domain }}"
     mode: 0644
   loop: "{{ dnsmasq_hosts }}"
   become: true
 
-- name: Deploying Dnsmasq Service.
-  copy:
+- name: Dnsmasq - Deploying Dnsmasq Service.
+  ansible.builtin.copy:
     src: "{{ homebrew_prefix }}/opt/dnsmasq/homebrew.mxcl.dnsmasq.plist"
     dest: "/Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist"
     mode: 0644
   become: true
 
-- name: Ensuring that Dnsmasq Service is Running.
+- name: Dnsmasq - Ensuring that Dnsmasq Service is Running.
   community.general.launchd:
     name: homebrew.mxcl.dnsmasq
     enabled: true

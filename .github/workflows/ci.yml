@@ -31,14 +31,14 @@ jobs:
 
       - name: Install test dependencies.
         run: |
-          ansible-galaxy install -r requirements.yml
           pip3 install yamllint
           pip3 install ansible-lint
+          ansible-galaxy install -r requirements.yml
 
-      - name: Run yamllint
+      - name: Run yamllint.
         run: yamllint .
 
-      - name: Run ansible lint
+      - name: Run ansible lint.
         working-directory: tests
         run: ansible-lint test.yml -c ../.ansible-lint
 
@@ -47,12 +47,12 @@ jobs:
         run: ansible-playbook test.yml --syntax-check
 
   integration:
-    name: Integration
+    name: Integration.
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os:
-          - macos-11
+          - macos-12
 
     steps:
       - name: Check out the codebase.
@@ -61,7 +61,7 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: Install dependencies
+      - name: Install dependencies.
         run: |
           set -eux
           pip install ansible

@@ -1,4 +1,6 @@
+---
+
+# https://ansible-lint.readthedocs.io/en/latest/configuring/
+
 skip_list:
-  - 'yaml'
-  - 'role-name'
-  - 'fqcn-builtins'
+  - 'experimental'
