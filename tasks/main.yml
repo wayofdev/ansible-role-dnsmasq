@@ -28,7 +28,7 @@
   become: true
 
 - name: Dnsmasq - Configuring Dnsmasq Resolver.
-  ansible.bultin.copy:
+  ansible.builtin.copy:
     src: resolver.conf
     dest: "/etc/resolver/{{ item.domain }}"
     mode: 0644
