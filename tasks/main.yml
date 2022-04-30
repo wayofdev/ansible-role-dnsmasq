@@ -21,7 +21,7 @@
     mode: 0644
 
 - name: Dnsmasq - Ensuring resolver directory exists.
-  ansible.bultin.file:
+  ansible.builtin.file:
     dest: /etc/resolver
     state: directory
     mode: 0755
