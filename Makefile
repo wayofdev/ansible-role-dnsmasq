@@ -27,6 +27,8 @@ test:
 .PHONY: test
 
 test-dns:
+	sudo dscacheutil -flushcache
+	sudo killall -HUP mDNSResponder
 	ping -c 6 my-default.subdomain.docker
 .PHONY: test-dnsmasq
 
