@@ -1,16 +1,41 @@
 ---
 
+- name: Dnsmasq | Check if app is already installed
+  ansible.builtin.command: dnsmasq --version
+  register: dnsmasq_version_output
+  ignore_errors: true
+  changed_when: false
+  tags:
+    - dnsmasq-install
+
+- name: Dnsmasq | Should we install
+  ansible.builtin.set_fact:
+    dnsmasq_install: "{{ dnsmasq_version_output.rc > 0 }}"
+  tags:
+    - dnsmasq-install
+
+- name: Dnsmasq | Debug task
+  ansible.builtin.debug:
+    msg: "Existing dnsmasq binary in system: {{ dnsmasq_install | ternary(false,true) }}"
+  tags:
+    - dnsmasq-install
+
 - name: Dnsmasq | Installing application.
   community.general.homebrew:
     name: dnsmasq
     state: present
     update_homebrew: true
+  when: dnsmasq_install
+  tags:
+    - dnsmasq-install
 
 - name: Dnsmasq | Get system etc directory
   ansible.builtin.shell: >
     echo "$(brew --prefix)/etc/"
   register: etc_config_directory
   changed_when: false
+  tags:
+    - dnsmasq-configure
 
 - name: Dnsmasq | Copying configuration
   ansible.builtin.template:
@@ -19,13 +44,25 @@
     owner: "{{ homebrew_user }}"
     group: "{{ homebrew_group }}"
     mode: 0644
+  tags:
+    - dnsmasq-configure
 
-- name: Dnsmasq | Ensuring resolver directory exists
+- name: Dnsmasq | Check if resolver directory exists
+  ansible.builtin.stat:
+    path: /etc/resolver
+  register: resolver_dir
+  tags:
+    - dnsmasq-configure
+
+- name: Dnsmasq | Creating resolver directory if not exists
   ansible.builtin.file:
     dest: /etc/resolver
     state: directory
     mode: 0755
+  when: not resolver_dir.stat.exists
   become: true
+  tags:
+    - dnsmasq-configure
 
 - name: Dnsmasq | Configuring resolver
   ansible.builtin.copy:
@@ -34,6 +71,8 @@
     mode: 0644
   loop: "{{ dnsmasq_hosts }}"
   become: true
+  tags:
+    - dnsmasq-configure
 
 - name: Dnsmasq | Deploying service
   ansible.builtin.copy:
@@ -41,11 +80,21 @@
     dest: "/Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist"
     mode: 0644
   become: true
+  tags:
+    - dnsmasq-configure
   notify:
     - Restart Dnsmasq
 
-- name: Dnsmasq | Ensuring that service is running
+- name: Dnsmasq | Ensuring that service is restarted and running
   community.general.launchd:
     name: homebrew.mxcl.dnsmasq
     enabled: true
-    state: started
+    state: restarted
+  changed_when: false
+  tags:
+    - dnsmasq-configure
+
+- name: Dnsmasq | Ping random host – {{ random_host }}.docker
+  ansible.builtin.ping: "{{ random_host }}.docker"
+  tags:
+    - dnsmasq-configure
