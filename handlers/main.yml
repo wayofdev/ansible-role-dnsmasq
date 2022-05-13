@@ -1,6 +1,6 @@
 ---
 
-- name: Restarting Dnsmasq Service
+- name: Dnsmasq | Restarting Dnsmasq Service
   community.general.launchd:
     name: homebrew.mxcl.dnsmasq
     state: restarted

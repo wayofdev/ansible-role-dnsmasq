@@ -2,21 +2,33 @@
 ### Variables
 ###
 
+ANSIBLE_FORCE_COLOR = 1
+
+# https://serverfault.com/questions/1031491/display-ansible-playbook-output-properly-formatted
+# https://stackoverflow.com/questions/50009505/ansible-stdout-formatting
+ANSIBLE_STDOUT_CALLBACK = unixy
+
+
 ### Playbook name
-playbook ?= main.yml
+playbook ?= test.yml
+workdir ?= ./tests
 inventory ?= inventory.yml
 reqs ?= requirements.yml
 
 ### Lint yaml files
 lint:
-	ansible-lint
-	yamllint .
+	cd $(workdir) && ansible-lint $(playbook) -c ../.ansible-lint
+	cd $(workdir) && ansible-playbook $(playbook) --syntax-check
 .PHONY: lint
 
 ### Run tests
 test:
-	ansible-playbook tests/test.yml --ask-become
+	cd $(workdir) && ansible-playbook $(playbook) --ask-password
 .PHONY: test
+
+test-dns:
+	ping -c 6 my-default.subdomain.docker
+.PHONY: test-dnsmasq
 
 ### List all hostnames
 ls-host:
@@ -25,10 +37,15 @@ ls-host:
 
 ### Check playbook syntax
 check-syntax:
-	ansible-playbook $(playbook) -i $(inventory) --syntax-check
+	cd $(workdir) && ansible-playbook $(playbook) -i $(inventory) --syntax-check
 .PHONY: check-syntax
 
 ### Install ansible dependencies
 install-deps:
 	ansible-galaxy install -r $(reqs)
 .PHONY: install-deps
+
+### Git
+hooks:
+	pre-commit install
+.PHONY: install-hooks

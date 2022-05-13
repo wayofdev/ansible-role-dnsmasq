@@ -11,6 +11,3 @@ rules:
     require-starting-space: true
     min-spaces-from-content: 1
   line-length: disable
-
-ignore: |
-  .github/stale.yml
