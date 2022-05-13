@@ -23,7 +23,7 @@ lint:
 
 ### Run tests
 test:
-	cd $(workdir) && ansible-playbook $(playbook) --ask-password
+	cd $(workdir) && ansible-playbook $(playbook) --ask-become
 .PHONY: test
 
 test-dns:

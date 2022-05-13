@@ -41,6 +41,8 @@
     dest: "/Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist"
     mode: 0644
   become: true
+  notify:
+    - Restart Dnsmasq
 
 - name: Dnsmasq | Ensuring that service is running
   community.general.launchd:
