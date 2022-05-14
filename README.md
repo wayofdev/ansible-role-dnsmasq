@@ -129,6 +129,17 @@ $ make test-dns
 
 <br>
 
+## 🧩 Compatibility
+
+This role has been tested on these systems:
+
+| system / container | tag      |
+| :----------------- | -------- |
+| macos              | monterey |
+| macos              | big-sur  |
+
+<br>
+
 ## 🤝 License
 
 [![Licence](https://img.shields.io/github/license/wayofdev/ansible-role-dnsmasq?style=for-the-badge)](./LICENSE)
