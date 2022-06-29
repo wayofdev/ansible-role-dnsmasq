@@ -2,5 +2,7 @@
 
 dnsmasq_hosts:
   # Mapping some top level domains to localhost
-  - {domain: docker, ip: 127.0.0.1}
-  - {domain: mac, ip: 127.0.0.1}
+  - {domain: 'docker', ip: '127.0.0.1'}
+  - {domain: 'mac', ip: '127.0.0.1'}
+
+...

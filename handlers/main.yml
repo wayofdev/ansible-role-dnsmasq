@@ -1,8 +1,10 @@
 ---
 
-- name: Dnsmasq | Restarting Dnsmasq Service
+- name: Dnsmasq-restart
   community.general.launchd:
     name: homebrew.mxcl.dnsmasq
     state: restarted
-  listen: Restart Dnsmasq
   become: true
+  become_user: root
+
+...
