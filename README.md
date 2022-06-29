@@ -1,9 +1,11 @@
 <br>
 
 <div align="center">
-<img width="400" src="./assets/logo.gh-light-mode-only.png#gh-light-mode-only">
-<img width="400" src="./assets/logo.gh-dark-mode-only.png#gh-dark-mode-only">
+<img width="456" src="https://raw.githubusercontent.com/wayofdev/ansible-role-dnsmasq/master/assets/logo.gh-light-mode-only.png#gh-light-mode-only">
+<img width="456" src="https://raw.githubusercontent.com/wayofdev/ansible-role-dnsmasq/master/assets/logo.gh-dark-mode-only.png#gh-dark-mode-only">
 </div>
+
+
 
 <br>
 
@@ -11,13 +13,12 @@
 
 <div align="center">
 <a href="https://actions-badge.atrox.dev/wayofdev/ansible-role-dnsmasq/goto"><img alt="Build Status" src="https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fwayofdev%2Fansible-role-dnsmasq%2Fbadge&style=flat-square"/></a>
-<a href="https://galaxy.ansible.com/lotyp/dnsmasq"><img alt="Ansible Role" src="https://img.shields.io/ansible/role/58558?style=flat-square"/></a>
+<a href="https://galaxy.ansible.com/wayofdev/dnsmasq"><img alt="Ansible Role" src="https://img.shields.io/ansible/role/59601?style=flat-square"/></a>
 <a href="https://github.com/wayofdev/ansible-role-dnsmasq/tags"><img src="https://img.shields.io/github/v/tag/wayofdev/ansible-role-dnsmasq?sort=semver&style=flat-square" alt="Latest Version"></a>
-<a href="https://galaxy.ansible.com/lotyp/dnsmasq">
-<img alt="Ansible Quality Score" src="https://img.shields.io/ansible/quality/58558?style=flat-square"/></a>
-<a href="https://galaxy.ansible.com/lotyp/dnsmasq">
-<img alt="Ansible Role" src="https://img.shields.io/ansible/role/d/58558?style=flat-square"/></a>
-<a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square" alt="Software License"/></a>
+<a href="https://galaxy.ansible.com/wayofdev/dnsmasq"><img alt="Ansible Quality Score" src="https://img.shields.io/ansible/quality/59601?style=flat-square"/></a>
+<a href="https://galaxy.ansible.com/wayofdev/dnsmasq"><img alt="Ansible Role" src="https://img.shields.io/ansible/role/d/59601?style=flat-square"/></a>
+<a href="LICENSE"><img src="https://img.shields.io/github/license/wayofdev/ansible-role-dnsmasq.svg?style=flat-square&color=blue" alt="Software License"/></a>
+<a href="#"><img alt="Commits since latest release" src="https://img.shields.io/github/commits-since/wayofdev/ansible-role-dnsmasq/latest?style=flat-square"></a>
 </div>
 
 
@@ -49,14 +50,16 @@ If you **like/use** this role, please consider **starring** it. Thanks!
 
 ## 📑 Requirements
 
-  - **Homebrew**: Requires `homebrew` already installed (you can use `geerlingguy.mac.homebrew` to install it on your Mac).
-  - **ansible.community.general** – installation handled by `Makefile`
+* Up-to-date version of ansible. During maintenance/development, we stick to ansible versions and will use new features if they are available (and update `meta/main.yml` for the minimum version).
+* Compatible OS. See [compatibility](#-compatibility) table.
+* `jmespath` library needs to be installed on the host running the playbook (needed for the `json_query` filter).
+* Role has dependencies on third-party roles on different operating systems. See `requirements.yml` and [dependencies](#-dependencies) section.
 
 <br>
 
 ## 🔧 Role Variables
 
-Available variables are listed below, along with example values (see `defaults/main.yml`):
+Available variables are listed below, along with example values (see `defaults/main.yml`). Additional variables are stored in `vars/main.yml`.
 
 ### → Structure
 
@@ -65,15 +68,9 @@ Add domain names that will be mapped to ip addresses. Defaults should be fine, i
 ```yaml
 dnsmasq_hosts:
   # Mapping some top level domains to localhost
-  - {domain: docker, ip: 127.0.0.1}
-  - {domain: mac, ip: 127.0.0.1}
+  - {domain: 'docker', ip: '127.0.0.1'}
+  - {domain: 'mac', ip: '127.0.0.1'}
 ```
-
-<br>
-
-## 📦 Dependencies
-
-  - (Soft dependency) `geerlingguy.homebrew`
 
 <br>
 
@@ -81,16 +78,20 @@ dnsmasq_hosts:
 
 ```yaml
 ---
-- hosts: localhost
+- hosts: all
+
+  # is needed when running over SSH
+  environment:
+    - PATH: "/usr/local/bin:/usr/local/sbin:/opt/homebrew/bin:{{ ansible_env.PATH }}"
 
   vars:
     dnsmasq_hosts:
-      - {domain: docker, ip: 127.0.0.1}
-      - {domain: mac, ip: 127.0.0.1}
+      - {domain: 'docker', ip: '127.0.0.1'}
+      - {domain: 'mac', ip: '127.0.0.1'}
 
   roles:
-    - geerlingguy.mac.homebrew
-    - lotyp.dnsmasq
+    - wayofdev.homebrew
+    - wayofdev.dnsmasq
 ```
 
 <br>
@@ -99,7 +100,13 @@ dnsmasq_hosts:
 
 To install dependencies and start development you can check contents of our `Makefile`
 
-**Install** depdendencies:
+**Install** [poetry](https://github.com/python-poetry/poetry) using [poetry-bin](https://github.com/gi0baro/poetry-bin) and all dev python dependencies:
+
+```bash
+$ make install
+```
+
+**Install** only python dependencies, assuming that you already have poetry:
 
 ```bash
 $ make install-deps
@@ -111,21 +118,57 @@ $ make install-deps
 $ make hooks
 ```
 
+**Lint** all role files:
+
+```bash
+$ make lint
+```
+
 <br>
 
 ## 🧪 Testing
 
-For local testing you can use these comands to test whole role or separate tasks:
+You can check `Makefile` to get full list of commands for remote and local testing. For local testing you can use these comands to test whole role or separate tasks:
 
-> :warning: **Notice**: By defaut all tests are ran against your local machine!
+### → on localhost
+
+> :warning: **Notice**: By defaut all tests are running against your local machine!
 
 ```bash
-# run all tasks
-$ make test
+# run molecule tests on localhost
+$ poetry run molecule test --scenario-name defaults-restored-on-localhost -- -vvv
 
-# test that dnsmasq is serving your new domains
-$ make test-dns
+# or with make command
+$ make m-local
+
+# choose which tags will be included
+$ export TASK_TAGS="dnsmasq-install,dnsmasq-configure"; make m-local
 ```
+
+<br>
+
+### → over SSH
+
+```bash
+# run molecule scenarios against remote machines over SSH
+# this will need VM setup and configuration
+$ poetry run molecule test --scenario-name defaults-restored-over-ssh -- -vvv
+
+$ make m-remote
+
+# tags also can be passed
+$ export TASK_TAGS="dnsmasq-install,dnsmasq-configure"
+$ make m-remote
+```
+
+<br>
+
+## 📦 Dependencies
+
+Installation handled by `Makefile` and requirements are defined in `requirements.yml`
+
+  - [wayofdev.homebrew](https://github.com/wayofdev/ansible-role-homebrew) - soft dependency, required if Homebrew isn't installed yet
+  - [ansible.community.general](https://docs.ansible.com/ansible/latest/collections/community/general/index.html)
 
 <br>
 
@@ -142,7 +185,7 @@ This role has been tested on these systems:
 
 ## 🤝 License
 
-[![Licence](https://img.shields.io/github/license/wayofdev/ansible-role-dnsmasq?style=for-the-badge)](./LICENSE)
+[![Licence](https://img.shields.io/github/license/wayofdev/ansible-role-dnsmasq?style=for-the-badge&color=blue)](./LICENSE)
 
 <br>
 
@@ -152,10 +195,22 @@ This role was created in **2022** by [lotyp / wayofdev](https://github.com/wayof
 
 <br>
 
-## 📚 Resources
+## 🧱 Credits and Resources
+
+**What I've found on internet:**
 
 * [robertdebock/ansible-role-dnsmasq](https://github.com/robertdebock/ansible-role-dnsmasq) ansible role to manage dnsmasq on Alpine, Debian, Fedora, Ubuntu...
-
 * Also Debian/Ubuntu users can take a look at [Debops](https://galaxy.ansible.com/debops/)'s [Dnsmasq role](https://galaxy.ansible.com/debops/dnsmasq/).
-
 * An Ansible role for managing Dnsmasq on RHEL/CentOS 7 of Fedora. [bertvv/ansible-dnsmasq](https://github.com/bertvv/ansible-dnsmasq)
+
+<br>
+
+## 🫡 Contributors
+
+<img align="left" src="https://img.shields.io/github/contributors-anon/wayofdev/ansible-role-dock?style=for-the-badge"/>
+
+<a href="https://github.com/wayofdev/ansible-role-dock/graphs/contributors">
+  <img src="https://opencollective.com/wod/contributors.svg?width=890&button=false">
+</a>
+
+<br>
