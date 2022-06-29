@@ -2,27 +2,34 @@
 
 galaxy_info:
   role_name: dnsmasq
-  author: lotyp
-  description: Ansible role that installs Dnsmasq on OSX.
+  author: wayofdev
+  description: Ansible role installs Dnsmasq on macOS and configures *.docker hostname.
   company: wayofdev
 
-  license: MIT
+  license: GPL-3.0-only
 
-  min_ansible_version: 2.9
+  min_ansible_version: "2.13"
 
   platforms:
     - name: macOS
       versions:
-        - "Big-Sur"
+        - Monterey
+        - Big-Sur
 
   galaxy_tags:
-    - 'docker'
-    - 'traefik'
-    - 'networking'
-    - 'bind'
-    - 'dns'
-    - 'dnsmasq'
-    - 'osx'
-    - 'mac'
+    - docker
+    - traefik
+    - networking
+    - bind
+    - dns
+    - dnsmasq
+    - osx
+    - mac
 
 dependencies: []
+
+# Ensure that custom Ansible plugins and modules included in the main MacOps
+# collection are available to roles in other collections.
+collections: ["wayofdev.macops"]
+
+...

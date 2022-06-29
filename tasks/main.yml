@@ -61,6 +61,7 @@
     mode: 0755
   when: not resolver_dir.stat.exists
   become: true
+  become_user: root
   tags:
     - dnsmasq-configure
 
@@ -71,6 +72,7 @@
     mode: 0644
   loop: "{{ dnsmasq_hosts }}"
   become: true
+  become_user: root
   tags:
     - dnsmasq-configure
 
@@ -80,10 +82,11 @@
     dest: "/Library/LaunchDaemons/homebrew.mxcl.dnsmasq.plist"
     mode: 0644
   become: true
+  become_user: root
   tags:
     - dnsmasq-configure
   notify:
-    - Restart Dnsmasq
+    - Dnsmasq-restart
 
 - name: Dnsmasq | Ensuring that service is restarted and running
   community.general.launchd:
@@ -94,7 +97,9 @@
   tags:
     - dnsmasq-configure
 
-- name: Dnsmasq | Ping random host – {{ random_host }}.docker
-  ansible.builtin.ping: "{{ random_host }}.docker"
+- name: "Dnsmasq | Ping random host — {{ random_host }}"
+  ansible.builtin.ping: "{{ random_host }}"
   tags:
     - dnsmasq-configure
+
+...
