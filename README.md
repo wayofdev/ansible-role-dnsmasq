@@ -27,6 +27,8 @@
 
 # Ansible Role: Dnsmasq for MacOS
 
+![Screenshot](assets/screenshot.png)
+
 Role is used to automate installation and setup of [dnsmasq](https://thekelleys.org.uk/dnsmasq/doc.html). Dnsmasq provides network infrastructure for small networks: DNS, DHCP, router advertisement and network boot.
 
 By default, role configures Dnsmasq to serve `*.docker` and `*.mac` domains as `localhost`. This allows you to use wildcard domains, like `your.subdomain.project.docker` for every of your project.

@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  connection: local
+
+  # is needed when running over SSH
+  environment:
+    - PATH: "/usr/local/bin:/usr/local/sbin:/opt/homebrew/bin:{{ ansible_env.PATH }}"
+
+  vars:
+    dnsmasq_hosts:
+      - {domain: 'docker', ip: '127.0.0.1'}
+      - {domain: 'mac', ip: '127.0.0.1'}
+
+  roles:
+    - wayofdev.homebrew
+    - wayofdev.dnsmasq
